@@ -31,6 +31,15 @@ qc_help () {
 }
 
 
+qc_update () {
+  cd QC_CODE_ROOT
+  cd QC_REPO_NAME
+  git checkout master
+  git pull origin master
+  ./setup.sh
+}
+
+
 git_full_commit_push () {
   local branch=${1:-"$USER-fixes"}
   local message=${2:-"Small fixes."}

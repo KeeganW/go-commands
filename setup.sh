@@ -15,6 +15,8 @@ perl -i -pe "s/qc \(\) {/$QC_TRIGGER_WORD () {/" ~/.qc/qc-core.sh
 perl -i -pe "s/QC_GIT_REMOTE/${QC_GIT_REMOTE//\//\\/}/g" ~/.qc/extra-functions.sh
 perl -i -pe "s/QC_GIT_USERNAME/$QC_GIT_USERNAME/g" ~/.qc/extra-functions.sh
 perl -i -pe "s/QC_TRIGGER_WORD/$QC_TRIGGER_WORD/g" ~/.qc/extra-functions.sh
+perl -i -pe "s/QC_CODE_ROOT/$QC_CODE_ROOT/g" ~/.qc/extra-functions.sh
+perl -i -pe "s/QC_REPO_NAME/$QC_REPO_NAME/g" ~/.qc/extra-functions.sh
 
 # Add all values in ./configurations.sh to ~/.qc/
 # Save the current Internal Field Separator, and change it to newline

@@ -5,6 +5,11 @@
     "description": "The help command to list out all the commands that are currently registered with Quick Commands."
   },
   {
+    "name": "update",
+    "command": "qc_update",
+    "description": "A quick function to update Quick Commands to the latest version in git."
+  },
+  {
     "name": "cd",
     "command": "cd",
     "description": "A collection of specific shortcuts to cd to.",
