@@ -1,0 +1,43 @@
+[
+  {
+    "name": "help",
+    "command": "qc_help",
+    "description": "The help command to list out all the commands that are currently registered with Quick Commands."
+  },
+  {
+    "name": "cd",
+    "command": "cd",
+    "description": "A collection of specific shortcuts to cd to.",
+    "commands": [
+      {
+        "name": "code",
+        "command": "cd $QC_CODE_ROOT",
+        "description": "Additional git commands beyond the standard git commands, and git aliases."
+      }
+    ]
+  },
+  {
+    "name": "git",
+    "command": "git",
+    "description": "Additional git commands beyond the standard git commands, and git aliases.",
+    "commands": [
+      {
+        "name": "fcp",
+        "description": "Full Commit and Push: Create a new branch, adds everything, creates a commit, and pushes to origin.",
+        "command": "git_full_commit_push $3 $4",
+        "args": [
+          "branch: The branch name to use with this push.",
+          "message: The commit message for this full commit."
+        ]
+      },
+      {
+        "name": "undo",
+        "description": "Undo: Undoes the most recent $3 changes.",
+        "command": "git reset --soft HEAD~${3:0}",
+        "args": [
+          "number: The number of commits to remove from the branch."
+        ]
+      }
+    ]
+  }
+]

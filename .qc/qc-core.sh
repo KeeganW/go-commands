@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# QC Core
+#
+# This file holds the core logic in calculating what command the user is actually trying to use, using the
+# commands.json file. We loop over their inputs finding the best match, then actually execute that match.
+
+# Here we source all of the relevant functions that have been written
+source ~/.qc/git-aliases.sh
+source ~/.qc/extra-functions.sh
+
+qc () {  # <<< QC_TRIGGER_WORD
+  # Function to search for matching objects recursively
+  search_objects() {
+    local json="$1"
+    local arg="$2"
+    local result=$(echo "$json" | jq -r "select(type == \"array\") | .[] | select(.name == \"$arg\")")
+    echo "$result"
+  }
+
+  best_command=""
+  found_args=""
+  current_json="$(cat ~/.qc/commands.json)"
+  for arg in "$@"; do
+    # Call the recursive function to search for matching objects
+    matching_objects=$(search_objects "$current_json" "$arg")
+
+    # Handle any matching objects
+    if [ -n "$matching_objects" ]; then
+      # echo -e "Matching objects for arg '$arg':\n$matching_objects"
+
+      # Save the command, as it is the best we have so far
+      best_command=$matching_objects
+      found_args="$found_args$arg > "
+
+      # Update the new json to search for the next arg
+      current_json=$(echo "$matching_objects" | jq -r '.commands?')
+    else
+      # No matching objects, so stop trying to loop through. Maybe was arg?
+      # TODO maybe we can use best_command and args to figure out if we are exiting incorrectly or not
+      # echo "No matching objects found for arg '$arg'"
+      break
+    fi
+  done
+
+  # -r flag removes double quotes by using raw mode
+  full_command=$(echo "$best_command" | jq -r ".command")
+
+  # Actually run the command
+  echo "running $full_command..."
+  if [ "$full_command" != "null" ]; then
+    eval "$full_command"
+  else
+    echo "No 'command' defined on '${found_args%???}'."
+  fi
+}
+
+#qc "${@:1}"
