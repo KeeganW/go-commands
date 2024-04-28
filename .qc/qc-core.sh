@@ -9,7 +9,23 @@
 source ~/.qc/git-aliases.sh
 source ~/.qc/extra-functions.sh
 
+qc_check_qc_version () {
+  curl_response=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$QC_REPO_ID/branches/master)
+  remote_master_sha=$(echo "$curl_response" | jq -r '.commit.sha | .[:8]')
+  local_master_sha=$(git rev-parse master | cut -c 1-8)
+
+  # Ensure that we actually got a response. If not, then we just ignore it.
+  if [ "$remote_master_sha" != "null" ]; then
+      if [ "$local_master_sha" != "$remote_master_sha" ]; then
+        echo "There have been updates to quick-commands, please run 'qc update'"
+      fi
+  fi
+}
+
 qc () {  # <<< QC_TRIGGER_WORD
+  # Check to see if we have the most recent version available
+  qc_check_qc_version
+
   # Function to search for matching objects recursively
   search_objects() {
     local json="$1"
