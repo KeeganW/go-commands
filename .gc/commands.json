@@ -1,12 +1,12 @@
 [
   {
     "name": "help",
-    "command": "qc_help",
+    "command": "gc_help",
     "description": "The help command to list out all the commands that are currently registered with Quick Commands."
   },
   {
     "name": "update",
-    "command": "qc_update",
+    "command": "gc_update",
     "description": "A quick function to update Quick Commands to the latest version in git."
   },
   {
@@ -16,8 +16,8 @@
     "commands": [
       {
         "name": "code",
-        "command": "cd $QC_CODE_ROOT",
-        "description": "Additional git commands beyond the standard git commands, and git aliases."
+        "command": "cd $GC_CODE_ROOT",
+        "description": "Navigate to the directory where you keep all of your code."
       }
     ]
   },

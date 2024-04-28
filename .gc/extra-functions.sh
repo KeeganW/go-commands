@@ -1,12 +1,12 @@
 #!/bin/bash
 
 
-qc_help () {
+gc_help () {
   # Starting text
-  echo -e "\nUsage: QC_TRIGGER_WORD COMMAND [COMMANDS] [OPTIONS]\n\nA framework for creating quick commands, like complex aliases.\n\nCommands:"
+  echo -e "\nUsage: GC_TRIGGER_WORD COMMAND [COMMANDS] [OPTIONS]\n\nA framework for creating go commands, shortcuts for your CLI.\n\nCommands:"
 
   # A helper function which displays the name and description of a given command
-  qc_help_recursive_print () {
+  gc_help_recursive_print () {
     local json="$1"
     local prefix="$2"
     local name=$(echo "$json" | jq -r '.name')
@@ -20,20 +20,20 @@ qc_help () {
     # Loop over all commands if they exist, calling recursively.
     echo "$json" | jq -c '.commands[]?' | while read -r child ; do
       prefix_child="$prefix  "
-      qc_help_recursive_print "$child" "$prefix_child"
+      gc_help_recursive_print "$child" "$prefix_child"
     done
   }
 
   # Loop over first order, calling recursive print
-  echo "$(cat ~/.qc/commands.json)" | jq -rc '.[]' | while read -r child ; do
-    qc_help_recursive_print "$child" "  "
+  echo "$(cat ~/.gc/commands.json)" | jq -rc '.[]' | while read -r child ; do
+    gc_help_recursive_print "$child" "  "
   done
 }
 
 
-qc_update () {
-  cd QC_CODE_ROOT
-  cd QC_REPO_NAME
+gc_update () {
+  cd GC_CODE_ROOT
+  cd GC_REPO_NAME
   git checkout master
   git pull origin master
   ./setup.sh
@@ -50,5 +50,5 @@ git_full_commit_push () {
   git commit -m "$message"
   git push --set-upstream origin "$branch"
   echo "Use the following template for your merge request:"
-  echo "QC_GIT_REMOTE/QC_GIT_USERNAME/$repo_name/compare/$current_branch...$branch"
+  echo "GC_GIT_REMOTE/GC_GIT_USERNAME/$repo_name/compare/$current_branch...$branch"
 }

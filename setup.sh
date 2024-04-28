@@ -6,31 +6,31 @@ source ./setup-extra-functions.sh
 
 # Install the script and its components
 echo "Installing scripts and their components into your home"
-mkdir -p ~/.qc
-cp -R .qc/ ~/.qc/
+mkdir -p ~/.gc
+cp -R .gc/ ~/.gc/
 
 # Use configurations to make changes in code
 echo "Updating scripts with your configurations"
-perl -i -pe "s/qc \(\) {/$QC_TRIGGER_WORD () {/" ~/.qc/qc-core.sh
-perl -i -pe "s/QC_REPO_ID/${QC_REPO_ID//\//\\/}/g" ~/.qc/extra-functions.sh
-perl -i -pe "s/QC_GIT_REMOTE/${QC_GIT_REMOTE//\//\\/}/g" ~/.qc/extra-functions.sh
-perl -i -pe "s/QC_GIT_USERNAME/$QC_GIT_USERNAME/g" ~/.qc/extra-functions.sh
-perl -i -pe "s/QC_TRIGGER_WORD/$QC_TRIGGER_WORD/g" ~/.qc/extra-functions.sh
-perl -i -pe "s/QC_CODE_ROOT/${QC_CODE_ROOT//\//\\/}/g" ~/.qc/extra-functions.sh
-perl -i -pe "s/QC_REPO_NAME/${QC_REPO_NAME//\//\\/}/g" ~/.qc/extra-functions.sh
+perl -i -pe "s/gc \(\) {/$GC_TRIGGER_WORD () {/" ~/.gc/gc-core.sh
+perl -i -pe "s/GC_REPO_ID/${GC_REPO_ID//\//\\/}/g" ~/.gc/extra-functions.sh
+perl -i -pe "s/GC_GIT_REMOTE/${GC_GIT_REMOTE//\//\\/}/g" ~/.gc/extra-functions.sh
+perl -i -pe "s/GC_GIT_USERNAME/$GC_GIT_USERNAME/g" ~/.gc/extra-functions.sh
+perl -i -pe "s/GC_TRIGGER_WORD/$GC_TRIGGER_WORD/g" ~/.gc/extra-functions.sh
+perl -i -pe "s/GC_CODE_ROOT/${GC_CODE_ROOT//\//\\/}/g" ~/.gc/extra-functions.sh
+perl -i -pe "s/GC_REPO_NAME/${GC_REPO_NAME//\//\\/}/g" ~/.gc/extra-functions.sh
 
-# Add all values in ./configurations.sh to ~/.qc/
+# Add all values in ./configurations.sh to ~/.gc/
 # Save the current Internal Field Separator, and change it to newline
 OLDIFS=$IFS
 IFS=$'\n'
 # Loop over all variables in the system.
 for var in $(set)
 do
-  # Check if the variable starts with the prefix 'QC_'.
-    if [[ $var == QC_* ]]
+  # Check if the variable starts with the prefix 'GC_'.
+    if [[ $var == GC_* ]]
     then
       # Append the variable and its value to the output file.
-      echo "export $var" >> ~/.qc/qc-core.sh
+      echo "export $var" >> ~/.gc/gc-core.sh
     fi
 done
 # Restore the original Internal Field Separator.
@@ -71,25 +71,25 @@ mkdir -p build
 
 # Generate the latest autocompletion file
 echo "Generating autocompletion file"
-qc_autocomplete_generation
+gc_autocomplete_generation
 
 # Update man page (test if man path exists, if it does, create the directory for standard man pages, then cp file there)
 echo "Generating man page"
-qc_man_page_generation
+gc_man_page_generation
 
 echo "Copying man page"
-[ -d /usr/local/share/man/ ] && mkdir -p /usr/local/share/man/man1 && cp build/$QC_TRIGGER_WORD.1 /usr/local/share/man/man1/
+[ -d /usr/local/share/man/ ] && mkdir -p /usr/local/share/man/man1 && cp build/$GC_TRIGGER_WORD.1 /usr/local/share/man/man1/
 
 # Setup autocompletion content
 case $SHELL in
 */zsh )
 	# Setup future uses
-	grep -qxF "source ~/.qc/qc-core.sh" ~/.zshrc || echo "source ~/.qc/qc-core.sh" >> ~/.zshrc
+	grep -qxF "source ~/.gc/gc-core.sh" ~/.zshrc || echo "source ~/.gc/gc-core.sh" >> ~/.zshrc
 
 	# Setup autocompletion directory
 	mkdir -p ~/.oh-my-zsh/completions
 	echo "Copying autocompletion"
-	cp build/_$QC_TRIGGER_WORD ~/.oh-my-zsh/completions/
+	cp build/_$GC_TRIGGER_WORD ~/.oh-my-zsh/completions/
 
 	# Add autocompletion directory to your path
 	grep -qxF "fpath=(~/.oh-my-zsh/completions \$fpath)" ~/.zshrc || echo "fpath=(~/.oh-my-zsh/completions \$fpath)" >> ~/.zshrc
@@ -98,8 +98,8 @@ case $SHELL in
 	;;
 */bash | */sh )
 	# Setup future uses (test for bashrc vs bash_profile. See if line exists, if it doesnt, then add it)
-	test -f ~/.bashrc && grep -qxF "source ~/.qc/qc-core.sh" ~/.bashrc || echo "source ~/.qc/qc-core.sh" >> ~/.bashrc
-	test -f ~/.bash_profile && grep -qxF "source ~/.qc/qc-core.sh" ~/.bash_profile || echo "source ~/.qc/qc-core.sh" >> ~/.bash_profile
+	test -f ~/.bashrc && grep -qxF "source ~/.gc/gc-core.sh" ~/.bashrc || echo "source ~/.gc/gc-core.sh" >> ~/.bashrc
+	test -f ~/.bash_profile && grep -qxF "source ~/.gc/gc-core.sh" ~/.bash_profile || echo "source ~/.gc/gc-core.sh" >> ~/.bash_profile
 
 	# TODO: write autocompletion script using https://sourabhbajaj.com/mac-setup/BashCompletion/
 

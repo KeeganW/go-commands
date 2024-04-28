@@ -1,91 +1,101 @@
-# Quick Commands
+# Go Commands
+Welcome to Go Commands, a handy tool designed to streamline your command line experience by providing quick access to frequently used commands, shortcuts, and resources. Inspired by the simplicity and efficiency of go links, this application brings the same convenience directly to your terminal.
 
-A way to quickly generate your own custom aliases to common commands you run.
+## Quick Start
+After cloning the repo run `./setup.sh`. After restarting your terminal, you should then be able to run `go help` for more information. If you are a golang developer, you an change the trigger keyword from `go` to anything of your choice by changing `GC_TRIGGER_WORD` in `configurations.sh`, then running the setup again.
 
-## Usage
+## What are Go Links?
+Go links are simple shortcuts or aliases that redirect users to specific URLs. They offer a concise and memorable way to access frequently visited websites or internal resources.
 
-Modify a single file, `.qc/commands.json`, to add new commands. For example, if we wanted to add a quick command for `git add -A`, we could write the following in the file:
+## Why Go Commands?
+Go Commands extends this concept to the terminal environment, allowing users to create and manage custom shortcuts for their most commonly used commands. Whether it's navigating to a frequently accessed directory, running complex scripts, or executing routine tasks, Go Commands simplifies the process with intuitive commands and minimal keystrokes.
 
-```json
-{
-  "name": "gall",
-  "command": "git add -A"
-}
-```
+## Why Not Just Use Alias?
+Aliases are powerful tools, which most command line enthusiasts use often. However, there are a few minor inconveniences:
+1. Limited Portability: Shell aliases are specific to the shell environment in which they are defined. If you switch to a different shell or use multiple shells, you'll need to redefine your aliases in each environment.
+2. Limited Scope: Shell aliases are typically confined to the current session or shell instance. Once you close the terminal or session, the aliases are lost unless you've configured them to persist across sessions.
+3. Maintenance Overhead: Managing a large number of aliases can become cumbersome over time. As your list of shortcuts grows, it can become difficult to remember and manage them all, leading to potential clutter and confusion.
+4. Collision Risk: Since aliases are global within the shell environment, there's a risk of accidentally overriding or conflicting with existing aliases or system commands. This can lead to unexpected behavior and errors.
+5. Lack of Centralized Management: With shell aliases, there's no centralized management or sharing mechanism. Each user must maintain their own set of aliases, making it challenging to collaborate or share shortcuts across teams or environments.
+6. Limited Functionality: Shell aliases are primarily used for simple text substitutions. They lack the flexibility and functionality offered by dedicated tools like Go Commands, which can handle more complex scenarios such as nested naming and custom function integration.
 
-After adding the new command, add it to your profile's alias:
+# Key Features
+Custom Shortcuts: Create personalized aliases for commands, directories, or any CLI command you frequently use.
+Grouped Shortcuts: Some shortcuts belong together (looking at you `cd-home` and `cd-code`). Group your shortcuts within the nested structure to simplify your command structure and improve command recollection.
+Efficient Navigation: Instantly access frequently used resources without typing lengthy directory structures.
+Automatic Documentation: Documentation and autocompletion scripts are automatically generated for you, making it even easier to remember those obscure shortcuts.
+(Still in progress) Centralized Management: Easily manage, update, and share your go commands across multiple devices and environments.
+(Still in progress) Interactive Interface: User-friendly interface for seamless interaction and configuration.
+(Still in progress) Smart Dynamic Commands: In specific directories, have commands become available as needed. While working in one repo, have a set of commands quickly available which are separate from those in other directories.
 
+# Getting Started
+To get started with Go Commands, simply clone this repository and run the following:
 ```bash
 ./setup.sh
 ```
+Once this setup is complete in your command line, you will need to reset your environment. In the last line of output from the previous command there should be a command you can run, but you can also more simply close your command line environment and re-open it. 
 
-Finally, use your new command!
+# Modification
+Once installed, you can begin creating your own custom shortcuts and enhancing your command line workflow. To do this, make modifications to the `.gc/commands.json` file in this repo. After making edits, repeat the [getting started](#getting-started) process.
 
-```bash
-qc gall
+## Adding New Commands
+To add new commands, create a new json object in `.gc/commands.json` with two fields:
+```json
+{
+  "name": "<The name of the command you want to shortcut this by.>",
+  "command": "<The actual command you want to run.>"
+}
 ```
 
-## Advanced Usage
-
-Obviously, the normal usage doesn't have much advantage over just writing your own aliases. You could simply add a new alias, `alias gall="git add -A"` to your profile. The only advantage here is gathering all the aliases in one place and updating them quickly, with a few bells and whistles. 
-
-That is where the nested command structure comes in. Want to add all your git aliases under one common name? Use the `commands` marker!
+## Adding New Directory Commands
+You may want to logically group some commands together. This can be done with the `commands` field in a go command. Here is an example:
 
 ```json
 {
-  "name": "git",
-  "command": "git",
+  "name": "cd",
+  "command": "cd",
+  "description": "This is a simple passthrough to the cd function. You could call `go cd ~` and it would behave just like `cd ~`.",
   "commands": [
     {
-      "name": "aa",
-      "description": "Add all modified files.",
-      "command": "git add -A"
+      "name": "code",
+      "command": "cd $GC_CODE_ROOT",
+      "description": "Navigate to the directory where you keep all of your code."
     },
     {
-      "name": "c",
-      "command": "git commit -m $1"
-    },
-    {
-      "name": "fcp",
-      "title": "Full Commit and Push",
-      "description": "Creates a new branch with name argument 1, adds all current files, commits the files with message argument 2, and pushes the new branch.",
-      "command": "git checkout -b $1 && git add -A && git commit -m $2 && git push"
+      "name": "gc",
+      "command": "cd $GC_CODE_ROOT/go-commands",
+      "description": "Navigate to the go commands directory.",
+      "commands": [
+        {
+          "name": "core",
+          "command": "cd $GC_CODE_ROOT/go-commands/.gc",
+          "description": "Navigate to the go commands core files directory."
+        }
+      ]
     }
   ]
 }
 ```
 
-With this structure you can start to write more complex json to create easy to remember aliases. In the above example, we can simplify the process for doing everything needed to make a new PR: `qc git fcp test-branch "New test commit"`
+In the above case, we could then type `go cd gc core` to navigate to the `.gc` directory in this repository, instead of trying to remember `~/Code/go-commands/.gc`. As you can see this flexable structure allows us to create organized commands which are easier to remember than the commands the represent.
 
-## Complex Functions
+## Adding custom functions
+Of course you may already have a significant amount of custom functions already written for automating your day to day life. As long as it is callable from the command line, you should be fine to add it as a new command, calling it how you would normally! If you are writing a new custom function for the first time, you can place it directly into your profile file, or in `.gc/extra-functions.sh` as well.
 
-Some commands are too complex to simply call from a simple file. To handle this, complex functions can be added to the `/scripts/qc-extra-functions.sh` file. These bash functions can be referenced from your json configs to make an easier time scripting complex functionality.
-
-Here is an example of doing that:
+# Usage
+Use your new commands!
 
 ```bash
-# In /scripts/qc-functions.sh
-print_something () {
-  echo Hello $2
-  return 5
-}
+go cd code
 ```
 
-Then in `/commands.json`
-```json
-{
-  "name": "print",
-  "command": "print_something"
-}
-```
+# Feedback
+Have feedback, suggestions, or feature requests? We'd love to hear from you! Feel free to open an issue on GitHub or reach out to us directly.
 
-## Other Configurations
+# License
+CommandLine Go-Links is licensed under the MIT License.
 
-If you want to change other things about how this system works, please see `/configurations.sh`.
-
-For example, in here you can change the `QC_TRIGGER_WORD` from something other than `qc` (for example, to your company name, or `go` if you aren't a golang developer).
-
-## Additional Notes
+# Additional Notes
 
 ### Fast Setup
 
@@ -104,4 +114,7 @@ In general, it appears that when generating the latest autocomplete script, it d
 
 ## Future Work
 
-1. Make this read from a remote location, so people can share commands and aliases with each other
+1. Create a github.io page, and tie to gocommands.io
+2. Make this read from a remote location, so people can share commands and aliases with each other
+3. Make an interface for changing commands easily (a website holding configurations that is pulled from?)
+4. Smart commands: based on current directory, make certain commands come to the front and be available over others

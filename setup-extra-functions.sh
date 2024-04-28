@@ -15,11 +15,11 @@ source ./configurations.sh
 # Outputs:
 #   Writes to `build/_<trigger word>
 #######################################
-qc_autocomplete_generation () {
-  FILE_WRITE="build/_$QC_TRIGGER_WORD"
+gc_autocomplete_generation () {
+  FILE_WRITE="build/_$GC_TRIGGER_WORD"
 
   # Write starting text at the top of the file
-  initial_autocomplete="#compdef $QC_TRIGGER_WORD\n"
+  initial_autocomplete="#compdef $GC_TRIGGER_WORD\n"
   echo -e "$initial_autocomplete" > "$FILE_WRITE"
 
   #######################################
@@ -60,7 +60,7 @@ qc_autocomplete_generation () {
   # Outputs:
   #   echos a formatted value string representing the value in autocomplete readable format
   #######################################
-  qc_autocomplete_generation_values () {
+  gc_autocomplete_generation_values () {
     local json="$1"
     local name
     name=$(echo "$json" | jq -r '.name')
@@ -81,7 +81,7 @@ qc_autocomplete_generation () {
   # Outputs:
   #   echos a formatted value string representing the value in autocomplete readable format
   #######################################
-  qc_autocomplete_generation_sub_menu () {
+  gc_autocomplete_generation_sub_menu () {
     local json="$1"
     local prefix="$2"
     local name
@@ -109,7 +109,7 @@ qc_autocomplete_generation () {
   # Outputs:
   #   echos a formatted value string representing the value in autocomplete readable format
   #######################################
-  qc_autocomplete_get_and_write () {
+  gc_autocomplete_get_and_write () {
     json="$1"
     jq_value="$2"
     write_name="$3"
@@ -118,7 +118,7 @@ qc_autocomplete_generation () {
     all_leaf_values=""
     while IFS= read -r child
     do
-      leaf_values=$(qc_autocomplete_generation_values "$child")
+      leaf_values=$(gc_autocomplete_generation_values "$child")
       if [[ $leaf_values != "" ]]; then
         all_leaf_values="$all_leaf_values \\\\\n        $leaf_values"
       fi
@@ -128,7 +128,7 @@ qc_autocomplete_generation () {
     all_nested_values=""
     while IFS= read -r child
     do
-      nested_values=$(qc_autocomplete_generation_sub_menu "$child" "$write_name_prefix")
+      nested_values=$(gc_autocomplete_generation_sub_menu "$child" "$write_name_prefix")
       if [[ $nested_values != "" ]]; then
         all_nested_values="$all_nested_values\n$nested_values"
       fi
@@ -150,47 +150,47 @@ qc_autocomplete_generation () {
   # Outputs:
   #   echos a formatted value string representing the value in autocomplete readable format
   #######################################
-  qc_autocomplete_generation_recursive () {
+  gc_autocomplete_generation_recursive () {
     local json="$1"
     local prefix="$2"
     local name=$(echo "$json" | jq -r '.name')
     local description=$(echo "$json" | jq -r '.description')
 
-    qc_autocomplete_get_and_write "$json" ".commands[]?" "${prefix}_${name}"
+    gc_autocomplete_get_and_write "$json" ".commands[]?" "${prefix}_${name}"
 
     # Loop over all commands if they exist, calling recursively.
     echo "$json" | jq -c '.commands[]?' | while read -r child ; do
       prefix_child="${prefix}_${name}"
-      qc_autocomplete_generation_recursive "$child" "$prefix_child"
+      gc_autocomplete_generation_recursive "$child" "$prefix_child"
     done
   }
 
-  qc_autocomplete_get_and_write "$(cat ~/.qc/commands.json)" ".[]" "$QC_TRIGGER_WORD" "$QC_TRIGGER_WORD"
+  gc_autocomplete_get_and_write "$(cat ~/.gc/commands.json)" ".[]" "$GC_TRIGGER_WORD" "$GC_TRIGGER_WORD"
 
   # Loop over first order, calling recursive print
-  cat ~/.qc/commands.json | jq -rc '.[]' | while read -r child ; do
-    qc_autocomplete_generation_recursive "$child" "$QC_TRIGGER_WORD"
+  cat ~/.gc/commands.json | jq -rc '.[]' | while read -r child ; do
+    gc_autocomplete_generation_recursive "$child" "$GC_TRIGGER_WORD"
   done
 
-  echo -e "_$QC_TRIGGER_WORD \"\$@\"" >> "$FILE_WRITE"
+  echo -e "_$GC_TRIGGER_WORD \"\$@\"" >> "$FILE_WRITE"
 }
 
-qc_man_page_generation () {
-  FILE_WRITE="build/$QC_TRIGGER_WORD.1"
+gc_man_page_generation () {
+  FILE_WRITE="build/$GC_TRIGGER_WORD.1"
 
-  echo -e ".TH $QC_TRIGGER_WORD 1" > "$FILE_WRITE"
+  echo -e ".TH $GC_TRIGGER_WORD 1" > "$FILE_WRITE"
   {
     echo -e ".SH NAME",
-    echo -e "$QC_TRIGGER_WORD \\\\- A way to quickly generate your own custom aliases to common commands you run.",
+    echo -e "$GC_TRIGGER_WORD \\\\- A way to quickly generate your own custom aliases to common commands you run.",
     echo -e ".SH SYNOPSIS",
-    echo -e "$QC_TRIGGER_WORD COMMAND [COMMANDS] [OPTIONS]",
+    echo -e "$GC_TRIGGER_WORD COMMAND [COMMANDS] [OPTIONS]",
     echo -e ".SH DESCRIPTION",
-    echo -e "$QC_TRIGGER_WORD is a framework for creating custom functions and aliases, which make it easier to remember and use commands you use every day.",
+    echo -e "$GC_TRIGGER_WORD is a framework for creating custom functions and aliases, which make it easier to remember and use commands you use every day.",
     echo -e ".SH OPTIONS"
   } >> "$FILE_WRITE"
 
   # A helper function which displays the name and description of a given command
-  qc_help_recursive_print () {
+  gc_help_recursive_print () {
     local json="$1"
     local prefix="$2"
     local name=$(echo "$json" | jq -r '.name')
@@ -204,13 +204,13 @@ qc_man_page_generation () {
     # Loop over all commands if they exist, calling recursively.
     echo "$json" | jq -c '.commands[]?' | while read -r child ; do
       prefix_child="$prefix  "
-      qc_help_recursive_print "$child" "$prefix_child"
+      gc_help_recursive_print "$child" "$prefix_child"
     done
   }
 
   # Loop over first order, calling recursive print
-  echo "$(cat ~/.qc/commands.json)" | jq -rc '.[]' | while read -r child ; do
-    qc_help_recursive_print "$child" "  "
+  echo "$(cat ~/.gc/commands.json)" | jq -rc '.[]' | while read -r child ; do
+    gc_help_recursive_print "$child" "  "
   done
 
   {

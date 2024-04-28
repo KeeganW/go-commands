@@ -40,7 +40,7 @@ alias gcan='git commit --amend --no-edit'
 alias gcm='git commit -m'
 
 # Checkout
-alias gc='git checkout'
+alias gch='git checkout'
 alias gcb='git checkout -b'
 alias gcma='git checkout master'
 alias gcmap='git checkout master && git pull'

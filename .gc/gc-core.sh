@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# QC Core
+# GC Core
 #
 # This file holds the core logic in calculating what command the user is actually trying to use, using the
 # commands.json file. We loop over their inputs finding the best match, then actually execute that match.
 
 # Here we source all of the relevant functions that have been written
-source ~/.qc/git-aliases.sh
-source ~/.qc/extra-functions.sh
+source ~/.gc/git-aliases.sh
+source ~/.gc/extra-functions.sh
 
-qc_check_qc_version () {
-  curl_response=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$QC_REPO_ID/branches/master)
+gc_check_gc_version () {
+  curl_response=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$GC_REPO_ID/branches/master)
   remote_master_sha=$(echo "$curl_response" | jq -r '.commit.sha | .[:8]')
   local_master_sha=$(git rev-parse master | cut -c 1-8)
 
   # Ensure that we actually got a response. If not, then we just ignore it.
   if [ "$remote_master_sha" != "null" ]; then
       if [ "$local_master_sha" != "$remote_master_sha" ]; then
-        echo "There have been updates to quick-commands, please run 'qc update'"
+        echo "There have been updates to quick-commands, please run 'gc update'"
       fi
   fi
 }
 
-qc () {  # <<< QC_TRIGGER_WORD
+gc () {  # <<< GC_TRIGGER_WORD
   # Check to see if we have the most recent version available
-  qc_check_qc_version
+  gc_check_gc_version
 
   # Function to search for matching objects recursively
   search_objects() {
@@ -36,7 +36,7 @@ qc () {  # <<< QC_TRIGGER_WORD
 
   best_command=""
   found_args=""
-  current_json="$(cat ~/.qc/commands.json)"
+  current_json="$(cat ~/.gc/commands.json)"
   for arg in "$@"; do
     # Call the recursive function to search for matching objects
     matching_objects=$(search_objects "$current_json" "$arg")
@@ -71,4 +71,4 @@ qc () {  # <<< QC_TRIGGER_WORD
   fi
 }
 
-#qc "${@:1}"
+#gc "${@:1}"
