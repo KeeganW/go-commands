@@ -4,7 +4,7 @@
 # https://stackoverflow.com/questions/9000698/completion-when-program-has-sub-commands
 # https://www.dolthub.com/blog/2021-11-15-zsh-completions-with-subcommands/
 
-source ./configurations.sh
+source .env
 
 #######################################
 # Generate the autocompletion file for zsh.
@@ -175,6 +175,15 @@ gc_autocomplete_generation () {
   echo -e "_$GC_TRIGGER_WORD \"\$@\"" >> "$FILE_WRITE"
 }
 
+#######################################
+# Generate the man page file for all distros.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Outputs:
+#   Writes to `build/<trigger word>.1
+#######################################
 gc_man_page_generation () {
   FILE_WRITE="build/$GC_TRIGGER_WORD.1"
 
@@ -189,7 +198,15 @@ gc_man_page_generation () {
     echo -e ".SH OPTIONS"
   } >> "$FILE_WRITE"
 
+  #######################################
   # A helper function which displays the name and description of a given command
+  # Globals:
+  #   None
+  # Arguments:
+  #   None
+  # Outputs:
+  #   Writes to `build/<trigger word>.1
+  #######################################
   gc_help_recursive_print () {
     local json="$1"
     local prefix="$2"
@@ -213,10 +230,11 @@ gc_man_page_generation () {
     gc_help_recursive_print "$child" "  "
   done
 
+  # Print remaining lines to the file
   {
     echo -e ".SH SEE ALSO",
     echo -e "git(1)"
     echo -e ".SH AUTHOR"
-    echo -e "Keegan Williams (github.io/keeganw)"
+    echo -e "Keegan Williams (github.io/KeeganW)"
   } >> "$FILE_WRITE"
 }

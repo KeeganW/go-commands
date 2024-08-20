@@ -1,8 +1,23 @@
 #!/bin/bash
 
+# Check if there is an env file. If not, create it
+ENV_FILE_PATH=".env"
+if [ ! -f "$ENV_FILE_PATH" ]; then
+  touch "$ENV_FILE_PATH"
+  cat <<EOF >> $ENV_FILE_PATH
+GC_TRIGGER_WORD="go"
+GC_GIT_USERNAME="$USER"
+GC_GIT_REMOTE="https://github.com"
+GC_CODE_ROOT="${PWD%/*}"
+GC_REPO_ID="KeeganW/go-commands"
+GC_REPO_NAME="${PWD##*/}"
+GC_REPO_NAME="${result:-/}"  # to correct for the case where PWD=/
+EOF
+fi
+
 # Import variables from the configurations script
-source ./configurations.sh
-source ./setup-extra-functions.sh
+source $ENV_FILE_PATH
+source ./extra-setup-functions.sh
 
 # Install the script and its components
 echo "Installing scripts and their components into your home"
@@ -11,7 +26,7 @@ cp -R .gc/ ~/.gc/
 
 # Use configurations to make changes in code
 echo "Updating scripts with your configurations"
-perl -i -pe "s/gc \(\) {/$GC_TRIGGER_WORD () {/" ~/.gc/gc-core.sh
+perl -i -pe "s/go \(\) {/$GC_TRIGGER_WORD () {/" ~/.gc/gc-core.sh
 perl -i -pe "s/GC_REPO_ID/${GC_REPO_ID//\//\\/}/g" ~/.gc/extra-functions.sh
 perl -i -pe "s/GC_GIT_REMOTE/${GC_GIT_REMOTE//\//\\/}/g" ~/.gc/extra-functions.sh
 perl -i -pe "s/GC_GIT_USERNAME/$GC_GIT_USERNAME/g" ~/.gc/extra-functions.sh
@@ -19,7 +34,7 @@ perl -i -pe "s/GC_TRIGGER_WORD/$GC_TRIGGER_WORD/g" ~/.gc/extra-functions.sh
 perl -i -pe "s/GC_CODE_ROOT/${GC_CODE_ROOT//\//\\/}/g" ~/.gc/extra-functions.sh
 perl -i -pe "s/GC_REPO_NAME/${GC_REPO_NAME//\//\\/}/g" ~/.gc/extra-functions.sh
 
-# Add all values in ./configurations.sh to ~/.gc/
+# Add all values in .env to ~/.gc/
 # Save the current Internal Field Separator, and change it to newline
 OLDIFS=$IFS
 IFS=$'\n'
@@ -44,7 +59,7 @@ case "${uname_out}" in
     *)          machine="UNKNOWN:${uname_out}"
 esac
 
-# Do custom OS setups
+# Do custom OS setups, but skip if the "fast" keyword exists
 if [[ $1 != "fast" ]] ; then
   if [[ $machine == "Mac" ]] ; then
     # Update or install homebrew

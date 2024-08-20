@@ -22,7 +22,7 @@ gc_check_gc_version () {
   fi
 }
 
-gc () {  # <<< GC_TRIGGER_WORD
+go () {
   # Check to see if we have the most recent version available
   gc_check_gc_version
 
