@@ -93,7 +93,14 @@ echo "Generating man page"
 gc_man_page_generation
 
 echo "Copying man page"
-cp build/$GC_TRIGGER_WORD.1 /opt/homebrew/share/man/man1
+which -s brew
+if [[ $? != 0 ]] ; then
+  # On homebrew machines this directory is locked down. This should work on non homebrew machines
+  [ -d /usr/local/share/man/ ] && mkdir -p /usr/local/share/man/man1 && cp build/$GC_TRIGGER_WORD.1 /usr/local/share/man/man1/
+else
+  # Homebrew is installed, so we can add the man page to the man pages there
+  cp build/$GC_TRIGGER_WORD.1 /opt/homebrew/share/man/man1
+fi
 
 # Setup autocompletion content
 case $SHELL in
