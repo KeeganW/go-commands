@@ -71,4 +71,5 @@ go () {
   fi
 }
 
+# Uncomment below to enable calling this file directly for testing.
 #gc "${@:1}"
