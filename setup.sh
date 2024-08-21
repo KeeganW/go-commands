@@ -93,7 +93,7 @@ echo "Generating man page"
 gc_man_page_generation
 
 echo "Copying man page"
-[ -d /usr/local/share/man/ ] && mkdir -p /usr/local/share/man/man1 && cp build/$GC_TRIGGER_WORD.1 /usr/local/share/man/man1/
+cp build/$GC_TRIGGER_WORD.1 /opt/homebrew/share/man/man1
 
 # Setup autocompletion content
 case $SHELL in
