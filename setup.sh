@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Check if there is an env file. If not, create it
+current_repo=${PWD##*/}
+current_repo="${current_repo:-/}"  # to correct for the case where PWD=/
 ENV_FILE_PATH=".env"
 if [ ! -f "$ENV_FILE_PATH" ]; then
   touch "$ENV_FILE_PATH"
@@ -10,8 +12,7 @@ GC_GIT_USERNAME="$USER"
 GC_GIT_REMOTE="https://github.com"
 GC_CODE_ROOT="${PWD%/*}"
 GC_REPO_ID="KeeganW/go-commands"
-GC_REPO_NAME="${PWD##*/}"
-GC_REPO_NAME="${result:-/}"  # to correct for the case where PWD=/
+GC_REPO_NAME="${current_repo}"
 EOF
 fi
 
@@ -116,7 +117,9 @@ case $SHELL in
 	# Add autocompletion directory to your path
 	grep -qxF "fpath=(~/.oh-my-zsh/completions \$fpath)" ~/.zshrc || echo "fpath=(~/.oh-my-zsh/completions \$fpath)" >> ~/.zshrc
 
-  echo "Setup complete! Please use the following to restart your shell: exec zsh"
+  echo "Setup complete! Please use the following to restart your shell:"
+  echo ""
+  echo "exec zsh"
 	;;
 */bash | */sh )
 	# Setup future uses (test for bashrc vs bash_profile. See if line exists, if it doesnt, then add it)
@@ -125,7 +128,9 @@ case $SHELL in
 
 	# TODO: write autocompletion script using https://sourabhbajaj.com/mac-setup/BashCompletion/
 
-  echo "Setup complete! Please use the following to restart your shell: source ~/.bashrc"
+  echo "Setup complete! Please use the following to restart your shell:"
+  echo ""
+  echo "source ~/.bashrc"
 	;;
 * )
 	echo "You are using an unsupported shell, $SHELL. Please make an issue requesting support for setup on github!"
