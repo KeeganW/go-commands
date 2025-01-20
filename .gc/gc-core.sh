@@ -17,7 +17,7 @@ gc_check_gc_version () {
   # Ensure that we actually got a response. If not, then we just ignore it.
   if [ "$remote_master_sha" != "null" ]; then
       if [ "$local_master_sha" != "$remote_master_sha" ]; then
-        echo "There have been updates to quick-commands, please run 'gc update'"
+        echo "There have been updates to quick-commands, please run 'go update'"
       fi
   fi
 }
@@ -72,5 +72,5 @@ go () {
 }
 
 # Uncomment below to enable calling this file directly for testing.
-# Call it by `sh .gc/.gc-code.sh <commands>`
-go "${@:1}"
+# Call it by `sh .gc/.gc-code.sh <command without go prefix>`
+#go "${@:1}"
