@@ -16,6 +16,11 @@ GC_REPO_NAME="${current_repo}"
 EOF
 fi
 
+COMMANDS_FILE_PATH=".commands.json"
+if [ ! -f "$COMMANDS_FILE_PATH" ]; then
+  touch "$COMMANDS_FILE_PATH"
+fi
+
 # Import variables from the configurations script
 source $ENV_FILE_PATH
 source ./extra-setup-functions.sh
@@ -24,6 +29,7 @@ source ./extra-setup-functions.sh
 echo "Installing scripts and their components into your home"
 mkdir -p ~/.gc
 cp -R .gc/ ~/.gc/
+cp .commands.json .gc/user-commands.json
 
 # Use configurations to make changes in code
 echo "Updating scripts with your configurations"
@@ -84,6 +90,9 @@ if [[ $1 != "fast" ]] ; then
 fi
 
 mkdir -p build
+
+# Combine the commands.json files
+jq -s '.[0] + .[1]' .gc/user-commands.json .gc/base-commands.json > .gc/commands.json
 
 # Generate the latest autocompletion file
 echo "Generating autocompletion file"

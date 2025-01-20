@@ -2,26 +2,24 @@
 Welcome to Go Commands, a handy tool designed to streamline your command line experience by providing quick access to frequently used commands, shortcuts, and resources. Inspired by the simplicity and efficiency of go links, this application brings the same convenience directly to your terminal.
 
 ## Quick Start
-After cloning the repo run `./setup.sh`. After restarting your terminal, you should then be able to run `go help` for more information. If you are a golang developer, you an change the trigger keyword from `go` to anything of your choice by changing `GC_TRIGGER_WORD` in `configurations.sh`, then running the setup again.
+After cloning the repo run `./setup.sh`. After restarting your terminal, you should then be able to run `go help` for more information. If you are a golang developer, you an change the trigger keyword from `go` to anything of your choice by changing `GC_TRIGGER_WORD` in `.env`, then running the setup again.
 
 ## What are Go Links?
 Go links are simple shortcuts or aliases that redirect users to specific URLs. They offer a concise and memorable way to access frequently visited websites or internal resources.
 
 ## Why Go Commands?
-Go Commands extends this concept to the terminal environment, allowing users to create and manage custom shortcuts for their most commonly used commands. Whether it's navigating to a frequently accessed directory, running complex scripts, or executing routine tasks, Go Commands simplifies the process with intuitive commands and minimal keystrokes.
+Go Commands extends this concept to the terminal environment, allowing users to create and manage custom shortcuts for their most commonly used commands. Whether it's navigating to a frequently accessed directory, running complex scripts, or executing routine tasks, Go Commands simplifies running these things to a few short words, and makes sharing them to peers easy.
 
 ## Why Not Just Use Alias?
-Aliases are powerful tools, which most command line enthusiasts use often. However, there are a few minor inconveniences:
+Aliases are powerful tools, which most people use. However, there are a few minor inconveniences:
 1. Limited Portability: Shell aliases are specific to the shell environment in which they are defined. If you switch to a different shell or use multiple shells, you'll need to redefine your aliases in each environment.
-2. Limited Scope: Shell aliases are typically confined to the current session or shell instance. Once you close the terminal or session, the aliases are lost unless you've configured them to persist across sessions.
-3. Maintenance Overhead: Managing a large number of aliases can become cumbersome over time. As your list of shortcuts grows, it can become difficult to remember and manage them all, leading to potential clutter and confusion.
-4. Collision Risk: Since aliases are global within the shell environment, there's a risk of accidentally overriding or conflicting with existing aliases or system commands. This can lead to unexpected behavior and errors.
-5. Lack of Centralized Management: With shell aliases, there's no centralized management or sharing mechanism. Each user must maintain their own set of aliases, making it challenging to collaborate or share shortcuts across teams or environments.
-6. Limited Functionality: Shell aliases are primarily used for simple text substitutions. They lack the flexibility and functionality offered by dedicated tools like Go Commands, which can handle more complex scenarios such as nested naming and custom function integration.
+2. Maintenance Overhead: Managing a large number of aliases can become cumbersome over time. As your list of shortcuts grows in your shell profile, it can become difficult to remember what they all are for, leading to potential clutter and confusion.
+3. Collision Risk: Since aliases are global within the shell environment, there's a risk of accidentally overriding or conflicting with existing aliases or system commands. This can lead to unexpected behavior and errors.
+4. Limited Functionality: Shell aliases are primarily used for simple text substitutions. They lack the flexibility and functionality offered by dedicated tools like Go Commands, which can handle more complex scenarios such as nested naming and custom function integration.
 
 # Key Features
 Custom Shortcuts: Create personalized aliases for commands, directories, or any CLI command you frequently use.
-Grouped Shortcuts: Some shortcuts belong together (looking at you `cd-home` and `cd-code`). Group your shortcuts within the nested structure to simplify your command structure and improve command recollection.
+Grouped Shortcuts: Some shortcuts belong together (looking at you `cd home` and `cd code`). Group your shortcuts within the nested structure to simplify your command structure and improve command recollection.
 Efficient Navigation: Instantly access frequently used resources without typing lengthy directory structures.
 Automatic Documentation: Documentation and autocompletion scripts are automatically generated for you, making it even easier to remember those obscure shortcuts.
 (Still in progress) Centralized Management: Easily manage, update, and share your go commands across multiple devices and environments.
@@ -36,10 +34,10 @@ To get started with Go Commands, simply clone this repository and run the follow
 Once this setup is complete in your command line, you will need to reset your environment. In the last line of output from the previous command there should be a command you can run, but you can also more simply close your command line environment and re-open it. 
 
 # Modification
-Once installed, you can begin creating your own custom shortcuts and enhancing your command line workflow. To do this, make modifications to the `.gc/commands.json` file in this repo. After making edits, repeat the [getting started](#getting-started) process.
+Once installed, you can begin creating your own custom shortcuts and enhancing your command line workflow. To do this, make modifications to the `.commands.json` file in this repo. After making edits, repeat the [getting started](#getting-started) process.
 
 ## Adding New Commands
-To add new commands, create a new json object in `.gc/commands.json` with two fields:
+To add new commands, create a new json object in `.commands.json` with two fields:
 ```json
 {
   "name": "<The name of the command you want to shortcut this by.>",

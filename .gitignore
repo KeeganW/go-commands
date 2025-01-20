@@ -1,5 +1,7 @@
 build/*
 .env
+.commands.json
+.gc/*commands.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+iml,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+iml,macos,windows

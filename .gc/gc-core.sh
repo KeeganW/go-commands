@@ -3,7 +3,7 @@
 # GC Core
 #
 # This file holds the core logic in calculating what command the user is actually trying to use, using the
-# commands.json file. We loop over their inputs finding the best match, then actually execute that match.
+# base-commands.json file. We loop over their inputs finding the best match, then actually execute that match.
 
 # Here we source all of the relevant functions that have been written
 source ~/.gc/git-aliases.sh
@@ -72,4 +72,5 @@ go () {
 }
 
 # Uncomment below to enable calling this file directly for testing.
-#gc "${@:1}"
+# Call it by `sh .gc/.gc-code.sh <commands>`
+go "${@:1}"
